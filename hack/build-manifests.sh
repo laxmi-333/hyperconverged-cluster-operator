@@ -228,10 +228,10 @@ sspFile=$(create_ssp_csv)
 sspCsv="${TEMPDIR}/${sspFile}.${CSV_EXT}"
 cdiFile=$(create_cdi_csv)
 cdiCsv="${TEMPDIR}/${cdiFile}.${CSV_EXT}"
-hppFile=$(create_hpp_csv)
-hppCsv="${TEMPDIR}/${hppFile}.${CSV_EXT}"
-aaqFile=$(create_aaq_csv)
-aaqCsv="${TEMPDIR}/${aaqFile}.${CSV_EXT}"
+# hppFile=$(create_hpp_csv)
+# hppCsv="${TEMPDIR}/${hppFile}.${CSV_EXT}"
+# aaqFile=$(create_aaq_csv)
+# aaqCsv="${TEMPDIR}/${aaqFile}.${CSV_EXT}"
 csvOverrides="${TEMPDIR}/csv_overrides.${CSV_EXT}"
 keywords="  keywords:
   - KubeVirt
@@ -278,7 +278,7 @@ EOM
 )
 
 # validate CSVs. Make sure each one of them contain an image (and so, also not empty):
-csvs=("${cnaCsv}" "${virtCsv}" "${sspCsv}" "${cdiCsv}" "${hppCsv}" "${aaqCsv}")
+csvs=("${cnaCsv}" "${virtCsv}" "${sspCsv}" "${cdiCsv}")
 for csv in "${csvs[@]}"; do
   grep -E "^ *image: [_a-zA-Z0-9/\.:@\-]+$" ${csv}
 done
@@ -291,8 +291,6 @@ ${PROJECT_ROOT}/tools/manifest-templator/manifest-templator \
   --virt-csv="$(<${virtCsv})" \
   --ssp-csv="$(<${sspCsv})" \
   --cdi-csv="$(<${cdiCsv})" \
-  --hpp-csv="$(<${hppCsv})" \
-  --aaq-csv="$(<${aaqCsv})" \
   --kv-virtiowin-image-name="${KUBEVIRT_VIRTIO_IMAGE}" \
   --operator-namespace="${OPERATOR_NAMESPACE}" \
   --smbios="${SMBIOS}" \
@@ -326,8 +324,6 @@ ${PROJECT_ROOT}/tools/csv-merger/csv-merger \
   --virt-csv="$(<${virtCsv})" \
   --ssp-csv="$(<${sspCsv})" \
   --cdi-csv="$(<${cdiCsv})" \
-  --hpp-csv="$(<${hppCsv})" \
-  --aaq-csv="$(<${aaqCsv})" \
   --kv-virtiowin-image-name="${KUBEVIRT_VIRTIO_IMAGE}" \
   --csv-version=${CSV_VERSION_PARAM} \
   --replaces-csv-version=${REPLACES_CSV_VERSION} \
