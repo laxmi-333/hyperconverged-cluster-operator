@@ -113,10 +113,10 @@ build-push-multi-arch-webhook-image:
 	IMAGE_NAME=$(IMAGE_REGISTRY)/$(WEBHOOK_IMAGE):$(IMAGE_TAG) SHA=$(SHA) DOCKER_FILE="build/Dockerfile.webhook" ./hack/build-push-multi-arch-images.sh
 
 container-build-operator-courier:
-	podman build -f tools/operator-courier/Dockerfile -t hco-courier .
+	. "hack/cri-bin.sh" && $$CRI_BIN build -f tools/operator-courier/Dockerfile -t hco-courier .
 
 container-build-validate-bundles:
-	podman build -f tools/operator-sdk-validate/Dockerfile -t operator-sdk-validate-hco .
+	. "hack/cri-bin.sh" && $$CRI_BIN build -f tools/operator-sdk-validate/Dockerfile -t operator-sdk-validate-hco .
 
 container-build-functest:
 	. "hack/cri-bin.sh" && $$CRI_BIN build  --platform=linux/$(ARCH) -f build/Dockerfile.functest -t $(IMAGE_REGISTRY)/$(FUNC_TEST_IMAGE):$(IMAGE_TAG) --build-arg git_sha=$(SHA) .
@@ -125,7 +125,7 @@ build-push-multi-arch-functest-image:
 	IMAGE_NAME=$(IMAGE_REGISTRY)/$(FUNC_TEST_IMAGE):$(IMAGE_TAG) SHA=$(SHA) DOCKER_FILE="build/Dockerfile.functest" ./hack/build-push-multi-arch-images.sh
 
 container-build-artifacts-server:
-	podman build -f build/Dockerfile.artifacts -t $(IMAGE_REGISTRY)/$(VIRT_ARTIFACTS_SERVER):$(IMAGE_TAG) --build-arg git_sha=$(SHA) .
+	. "hack/cri-bin.sh" && $$CRI_BIN build -f build/Dockerfile.artifacts -t $(IMAGE_REGISTRY)/$(VIRT_ARTIFACTS_SERVER):$(IMAGE_TAG) --build-arg git_sha=$(SHA) .
 
 build-push-multi-arch-artifacts-server:
 	IMAGE_NAME=$(IMAGE_REGISTRY)/$(VIRT_ARTIFACTS_SERVER):$(IMAGE_TAG) SHA=$(SHA) DOCKER_FILE="build/Dockerfile.artifacts" ./hack/build-push-multi-arch-images.sh
@@ -133,7 +133,7 @@ build-push-multi-arch-artifacts-server:
 container-push: container-push-operator container-push-webhook container-push-functest container-push-artifacts-server
 
 quay-login:
-	podman login $(IMAGE_REGISTRY) -u $(QUAY_USERNAME) -p "$(QUAY_PASSWORD)"
+	. "hack/cri-bin.sh" && $$CRI_BIN login $(IMAGE_REGISTRY) -u $(QUAY_USERNAME) -p "$(QUAY_PASSWORD)"
 
 container-push-operator:
 	. "hack/cri-bin.sh" && $$CRI_BIN push $$CRI_INSECURE $(IMAGE_REGISTRY)/$(OPERATOR_IMAGE):$(IMAGE_TAG)

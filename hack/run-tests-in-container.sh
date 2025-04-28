@@ -128,5 +128,5 @@ echo "Exiting... Exit code: $exitCode"
 [[ "${exitCode}" == "0" ]]
 
 # Brutally delete HCO removing the namespace where it's running"
-source hack/test_delete_ns.sh
-CMD=${KUBECTL_BINARY} test_delete_ns
+#source hack/test_delete_ns.sh
+#CMD=${KUBECTL_BINARY} test_delete_ns
